@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1764182460">
+  <project timestamp="1764182460" name="Clover Coverage">
+    <file name="/home/carotte/pr/defi-fullstack/backend/public/index.php">
+      <line num="5" type="stmt" count="0"/>
+      <line num="7" type="stmt" count="0"/>
+      <line num="9" type="stmt" count="0"/>
+      <line num="11" type="stmt" count="0"/>
+      <line num="12" type="stmt" count="0"/>
+      <line num="14" type="stmt" count="0"/>
+      <metrics loc="14" ncloc="14" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="6" coveredelements="0"/>
+    </file>
+    <metrics files="1" loc="14" ncloc="14" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="6" coveredelements="0"/>
+  </project>
+</coverage>
