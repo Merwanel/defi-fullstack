@@ -1,0 +1,36 @@
+###  Status Endpoint
+GET http://localhost:8080/status
+
+###  Routes Endpoint - Valid Request
+POST http://localhost:8080/routes
+Content-Type: application/json
+
+{
+  "fromStationId": "MX",
+  "toStationId": "ZW",
+  "analyticCode": "ANA-123"
+}
+
+###  Routes Endpoint - Missing fromStationId
+POST http://localhost:8080/routes
+Content-Type: application/json
+
+{
+  "toStationId": "ZW",
+  "analyticCode": "ANA-123"
+}
+
+###  Routes Endpoint - All fields missing
+POST http://localhost:8080/routes
+Content-Type: application/json
+
+{}
+
+###  Stats Endpoint
+GET http://localhost:8080/stats/distances
+
+###  Stats with date range
+GET http://localhost:8080/stats/distances?from=2025-01-01&to=2025-12-31
+
+###  Stats with groupBy
+GET http://localhost:8080/stats/distances?groupBy=month
