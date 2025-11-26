@@ -35,6 +35,19 @@ class RouteTest extends TestCase
 
         return [$response, $body];
     }
+
+    
+    public function testStatus()
+    {
+        $factory = new ServerRequestFactory();
+        $request = $factory->createServerRequest('GET', '/status');
+        
+        $response = $this->app->handle($request);
+        $body = json_decode((string)$response->getBody(), true);
+
+        $this->assertEquals('ok', $body['status']);
+    }
+
     public function testPostRoutesSuccess()
     {
         [$response, $body] = $this->getResponseForRoutesRequest('MZ', 'ZW', 'ANA-123');
