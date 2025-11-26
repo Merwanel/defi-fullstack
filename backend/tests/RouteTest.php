@@ -20,18 +20,24 @@ class RouteTest extends TestCase
         $registerRoutes($this->app);
     }
 
-    public function testPostRoutesSuccess()
+    private function getResponseForRoutesRequest($fromStationId, $toStationId, $analyticCode) : mixed 
     {
         $factory = new ServerRequestFactory();
         $request = $factory->createServerRequest('POST', '/routes');
         $request = $request->withParsedBody([
-            'fromStationId' => 'MX',
-            'toStationId' => 'ZW',
-            'analyticCode' => 'ANA-123'
+            'fromStationId' => $fromStationId,
+            'toStationId' => $toStationId,
+            'analyticCode' => $analyticCode
         ]);
-
+        
         $response = $this->app->handle($request);
         $body = json_decode((string)$response->getBody(), true);
+
+        return [$response, $body];
+    }
+    public function testPostRoutesSuccess()
+    {
+        [$response, $body] = $this->getResponseForRoutesRequest('MZ', 'ZW', 'ANA-123');
 
         $expected = [
             'id' => 'route-001',
@@ -46,19 +52,11 @@ class RouteTest extends TestCase
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeaderLine('Content-Type'));
         $this->assertEquals($expected, $body);
-
     }
 
     public function testPostRoutesMissingFields()
     {
-        $factory = new ServerRequestFactory();
-        $request = $factory->createServerRequest('POST', '/routes');
-        $request = $request->withParsedBody([
-            'fromStationId' => 'MX'
-        ]);
-
-        $response = $this->app->handle($request);
-        $body = json_decode((string)$response->getBody(), true);
+        [$response, $body] = $this->getResponseForRoutesRequest('MX', null, null);
 
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('MISSING_FIELDS', $body['code']);
