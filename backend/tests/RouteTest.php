@@ -16,8 +16,7 @@ class RouteTest extends TestCase
         $this->app = AppFactory::create();
         $this->app->add(new BodyParsingMiddleware());
 
-        // Load routes without running the server
-        $registerRoutes = require __DIR__ . '/../routes.php';
+        $registerRoutes = require __DIR__ . '/../src/routes.php';
         $registerRoutes($this->app);
     }
 
