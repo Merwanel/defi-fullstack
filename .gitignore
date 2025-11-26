@@ -3,4 +3,4 @@
 vendor/
 
 .phpunit.result.cache
-.xml
+*.xml
