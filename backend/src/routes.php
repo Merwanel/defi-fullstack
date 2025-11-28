@@ -3,7 +3,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 return function ($app) {
-    $app->post('/routes', function (Request $request, Response $response) {
+    $app->post('/routes', function (Request $request, Response $response) use ($app) {
         $data = $request->getParsedBody();
 
         if (!is_array($data)) {
@@ -31,18 +31,21 @@ return function ($app) {
                 ->withStatus(400);
         }
         
-        #TODO : replace placeholder
-        $payload = [
-            "id" => "route-001",
-            "fromStationId" => "MX",
-            "toStationId" => "ZW",
-            "analyticCode" => "ANA-123",
-            "distanceKm" => 45.5,
-            "path" => ["MX", "ST", "ZW"],
-            "createdAt" => "2025-11-25T14:30:00Z"
-        ];
+        $routeService = $app->getContainer()->get('routeService');
+        $route = $routeService->findRoute((int)$fromStationId, (int)$toStationId, $analyticCode);
 
-        $response->getBody()->write(json_encode($payload));
+        if (!$route) {
+            $error = [
+                'code' => 'ROUTE_NOT_FOUND',
+                'message' => 'No route found between the specified stations'
+            ];
+            $response->getBody()->write(json_encode($error));
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(404);
+        }
+
+        $response->getBody()->write(json_encode($route));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(201);
