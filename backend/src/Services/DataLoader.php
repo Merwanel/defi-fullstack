@@ -13,8 +13,7 @@ class DataLoader
     ) {}
 
     /**
-     * Load all stations and distances into memory
-     * @return array{stations: array, distances: array}
+     * @return array{stations: array<int, array{0: string, 1: string}>, distances: array<int, array<int, float>>}
      */
     public function load(): array
     {
@@ -23,7 +22,15 @@ class DataLoader
             $stations[$station->id] = [$station->shortName, $station->longName];
         }
 
-        $distances = $this->distanceRepository->findAll();
+        $distances = [];
+        foreach ($this->distanceRepository->findAll() as $distance) {
+            $parentId = (int) $distance->parentId;
+            $childId = (int) $distance->childId;
+            if (!isset($distances[$parentId])) {
+                $distances[$parentId] = [];
+            }
+            $distances[$parentId][$childId] = (float) $distance->distance;
+        }
 
         return [
             'stations' => $stations,
