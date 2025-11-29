@@ -1,6 +1,6 @@
 {
   "watch": ["backend"],
-  "ignore": ["backend/vendor", "backend/coverage", "backend/node_modules"],
+  "ignore": ["backend/vendor", "backend/coverage", "backend/node_modules", "backend/tests"],
   "ext": "php,json,yml,yaml,sh",
   "exec": "docker compose down -v && docker compose up --build",
   "delay": 1000,
