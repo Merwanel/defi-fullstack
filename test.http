@@ -6,8 +6,8 @@ POST http://localhost:8080/routes
 Content-Type: application/json
 
 {
-  "fromStationId": "MX",
-  "toStationId": "ZW",
+  "fromStationId": "6",
+  "toStationId": "3",
   "analyticCode": "ANA-123"
 }
 
@@ -16,7 +16,7 @@ POST http://localhost:8080/routes
 Content-Type: application/json
 
 {
-  "toStationId": "ZW",
+  "toStationId": "1",
   "analyticCode": "ANA-123"
 }
 
