@@ -12,11 +12,17 @@ class DataLoader
         private DistanceRepository $distanceRepository
     ) {}
 
+    private ?array $cache = null;
+
     /**
      * @return array{stations: array<int, array{0: string, 1: string}>, distances: array<int, array<int, float>>}
      */
     public function load(): array
     {
+        if ($this->cache !== null) {
+            return $this->cache;
+        }
+
         $stations = [];
         foreach ($this->stationRepository->findAll() as $station) {
             $stations[$station->id] = [$station->shortName, $station->longName];
@@ -32,9 +38,10 @@ class DataLoader
             $distances[$parentId][$childId] = (float) $distance->distance;
         }
 
-        return [
+        $this->cache = [
             'stations' => $stations,
             'distances' => $distances
         ];
+        return $this->cache;
     }
 }
