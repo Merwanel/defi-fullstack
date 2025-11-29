@@ -31,7 +31,7 @@ return function ($app) {
                 ->withStatus(400);
         }
         
-        $routeService = $app->getContainer()->get('routeService');
+        $routeService = $app->getContainer()->get(\App\Services\RouteService::class);
         $route = $routeService->findRoute((int)$fromStationId, (int)$toStationId, $analyticCode);
 
         if (!$route) {
