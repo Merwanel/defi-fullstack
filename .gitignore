@@ -1,6 +1,9 @@
 .idea/
+.vscode/
 
 vendor/
+node_modules/
 
 .phpunit.result.cache
 *.xml
+!phpunit.xml
