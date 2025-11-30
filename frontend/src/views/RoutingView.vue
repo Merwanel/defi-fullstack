@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { request } from '../client';
 import type { Route, RouteRequest } from '../types';
 import { useStations } from '../composables/useStations';
-import IteneraryView from './IteneraryView.vue';
+import ItineraryView from './ItineraryView.vue';
 
 const { stations } = useStations();
 
@@ -75,7 +75,7 @@ async function submit() {
       Error: {{ error }}
     </div>
     
-    <IteneraryView v-if="result" :result="result" />
+    <ItineraryView v-if="result" :result="result" />
     
   </div>
 </template>

@@ -1,9 +1,13 @@
+# IDE
 .idea/
 .vscode/
 
+# packages
 vendor/
 node_modules/
 
+# tests
+coverage/
 .phpunit.result.cache
 *.xml
 !phpunit.xml
