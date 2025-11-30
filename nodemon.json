@@ -1,8 +1,15 @@
 {
-  "watch": ["backend"],
-  "ignore": ["backend/vendor", "backend/coverage", "backend/node_modules", "backend/tests"],
+  "watch": [
+    "backend"
+  ],
+  "ignore": [
+    "backend/vendor",
+    "backend/coverage",
+    "backend/node_modules",
+    "backend/tests"
+  ],
   "ext": "php,json,yml,yaml,sh",
-  "exec": "docker compose down -v && docker compose up --build",
+  "exec": "docker compose down -v && docker compose up --build mariadb backend",
   "delay": 1000,
   "verbose": true
 }

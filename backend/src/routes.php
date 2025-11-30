@@ -3,7 +3,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 return function ($app) {
-    $app->post('/routes', function (Request $request, Response $response) use ($app) {
+    $app->group('/api/v1', function ($group) use ($app) {
+        $group->post('/routes', function (Request $request, Response $response) use ($app) {
         $data = $request->getParsedBody();
 
         if (!is_array($data)) {
@@ -49,9 +50,9 @@ return function ($app) {
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(201);
-    });
+        });
 
-    $app->get('/stations', function (Request $request, Response $response) use ($app) {
+        $group->get('/stations', function (Request $request, Response $response) use ($app) {
         $dataLoader = $app->getContainer()->get(\App\Services\DataLoader::class);
         $stationsDict = $dataLoader->load()['stations'];
 
@@ -66,15 +67,15 @@ return function ($app) {
 
         $response->getBody()->write(json_encode($stations));
         return $response->withHeader('Content-Type', 'application/json');
-    });
+        });
 
-    $app->get('/status', function (Request $request, Response $response) {
+        $group->get('/status', function (Request $request, Response $response) {
         $data = ['status' => 'ok', 'timestamp' => time()];
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json');
-    });
+        });
 
-    $app->get('/stats/distances', function (Request $request, Response $response) use ($app) {
+        $group->get('/stats/distances', function (Request $request, Response $response) use ($app) {
         $from = $request->getQueryParams()['from'] ?? null;
         $to = $request->getQueryParams()['to'] ?? null;
         $groupBy = $request->getQueryParams()['groupBy'] ?? 'none';
@@ -143,5 +144,6 @@ return function ($app) {
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);
+        });
     });
 };

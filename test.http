@@ -1,11 +1,11 @@
 ###  Status Endpoint
-GET http://localhost:8080/status
+GET http://localhost:8080/api/v1/status
 
 ###  Stations Endpoint
-GET http://localhost:8080/stations
+GET http://localhost:8080/api/v1/stations
 
 ###  Routes Endpoint - Valid Request
-POST http://localhost:8080/routes
+POST http://localhost:8080/api/v1/routes
 Content-Type: application/json
 
 {
@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ###  Routes Endpoint - Missing fromStationId
-POST http://localhost:8080/routes
+POST http://localhost:8080/api/v1/routes
 Content-Type: application/json
 
 {
@@ -24,37 +24,37 @@ Content-Type: application/json
 }
 
 ###  Routes Endpoint - All fields missing
-POST http://localhost:8080/routes
+POST http://localhost:8080/api/v1/routes
 Content-Type: application/json
 
 {}
 
 ###  Stats Endpoint - No parameters
-GET http://localhost:8080/stats/distances
+GET http://localhost:8080/api/v1/stats/distances
 
 ###  Stats with date range
-GET http://localhost:8080/stats/distances?from=2025-01-01&to=2025-12-31
+GET http://localhost:8080/api/v1/stats/distances?from=2025-01-01&to=2025-12-31
 
 ###  Stats with groupBy=month
-GET http://localhost:8080/stats/distances?groupBy=month
+GET http://localhost:8080/api/v1/stats/distances?groupBy=month
 
 ###  Stats with groupBy=day
-GET http://localhost:8080/stats/distances?groupBy=day
+GET http://localhost:8080/api/v1/stats/distances?groupBy=day
 
 ###  Stats with groupBy=year
-GET http://localhost:8080/stats/distances?groupBy=year
+GET http://localhost:8080/api/v1/stats/distances?groupBy=year
 
 ###  Stats with all parameters
-GET http://localhost:8080/stats/distances?from=2025-11-01&to=2025-11-30&groupBy=month
+GET http://localhost:8080/api/v1/stats/distances?from=2025-11-01&to=2025-11-30&groupBy=month
 
 ###  Stats with invalid date format (from)
-GET http://localhost:8080/stats/distances?from=invalid-date&to=2025-12-31
+GET http://localhost:8080/api/v1/stats/distances?from=invalid-date&to=2025-12-31
 
 ###  Stats with invalid date format (to)
-GET http://localhost:8080/stats/distances?from=2025-01-01&to=not-a-date
+GET http://localhost:8080/api/v1/stats/distances?from=2025-01-01&to=not-a-date
 
 ###  Stats with from > to (invalid range)
-GET http://localhost:8080/stats/distances?from=2025-12-31&to=2025-01-01
+GET http://localhost:8080/api/v1/stats/distances?from=2025-12-31&to=2025-01-01
 
 ###  Stats with invalid groupBy value
-GET http://localhost:8080/stats/distances?groupBy=invalid
+GET http://localhost:8080/api/v1/stats/distances?groupBy=invalid
