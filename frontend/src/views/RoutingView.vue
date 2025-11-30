@@ -58,8 +58,13 @@ async function submit() {
         </select>
       </div>
       <div class="form-group">
-        <label for="analytic">Analytic Code:</label>
-        <input id="analytic" v-model="form.analyticCode" required />
+        <label for="analytic">Transport type:</label>
+        <select id="analytic" v-model="form.analyticCode" required>
+          <option value="">-- Select transport type --</option>
+          <option value="fret">Fret</option>
+          <option value="maintenance">Maintenance</option>
+          <option value="passager">Passager</option>
+        </select>
       </div>
       <button type="submit" :disabled="loading">
         {{ loading ? 'Calculating...' : 'Calculate' }}
