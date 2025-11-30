@@ -8,7 +8,7 @@ const currentView = ref<'routing' | 'analytics'>('routing')
 
 <template>
   <div id="app">
-    <h1>API Client</h1>
+    <h1>Your Itinerary</h1>
     <nav>
       <button :class="{ active: currentView === 'routing' }" @click="currentView = 'routing'">
         Routing
