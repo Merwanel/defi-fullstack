@@ -36,7 +36,10 @@ class PathFinder
                 continue;
             }
 
-            foreach ($distances[$current] as $neighbor => $cost) {
+            foreach ($distances[$current] as $_ => $value) {
+                $neighbor = (int)$value[0] ;
+                $cost = (float)$value[1] ;
+
                 $distanceSoFar = ($dist[$current] ?? PHP_INT_MAX) + $cost;
 
                 if (!isset($dist[$neighbor]) || $distanceSoFar < $dist[$neighbor]) {

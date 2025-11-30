@@ -15,7 +15,7 @@ class DataLoader
     private ?array $cache = null;
 
     /**
-     * @return array{stations: array<int, array{0: string, 1: string}>, distances: array<int, array<int, float>>}
+     * @return array{stations: array<int, array{0: string, 1: string}>, distances: array<int, list<array{0: int, 1: float}>>}
      */
     public function load(): array
     {
@@ -29,15 +29,14 @@ class DataLoader
         }
 
         $distances = [];
-        foreach ($this->distanceRepository->findAll() as $distance) {
-            $parentId = (int) $distance->parentId;
-            $childId = (int) $distance->childId;
+        foreach ($this->distanceRepository->findAll() as $edge) {
+            $parentId = (int) $edge->parentId;
+            $childId = (int) $edge->childId;
             if (!isset($distances[$parentId])) {
                 $distances[$parentId] = [];
             }
-            $distances[$parentId][$childId] = (float) $distance->distance;
+            $distances[$parentId][] = [$childId, (float) $edge->distance];
         }
-
         $this->cache = [
             'stations' => $stations,
             'distances' => $distances

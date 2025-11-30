@@ -9,9 +9,8 @@ class PathFinderTest extends TestCase
     {
         $finder = new PathFinder();
         $distances = [
-            1 => [2 => 10.0],
-            1 => [3 => 20.0],
-            2 => [3 => 5.0]
+            1 => [[2, 10.0], [3, 20.0]],
+            2 => [[3, 5.0]]
         ];
 
         $result = $finder->findShortestPath(1, 3, $distances);
@@ -25,8 +24,8 @@ class PathFinderTest extends TestCase
     {
         $finder = new PathFinder();
         $distances = [
-            1 => [2 => 10.0],
-            3 => [4 => 10.0]
+            1 => [[2, 10.0]],
+            3 => [[4, 10.0]]
         ];
 
         $result = $finder->findShortestPath(1, 3, $distances);

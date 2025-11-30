@@ -29,6 +29,6 @@ class DataLoaderTest extends TestCase
         $this->assertArrayHasKey('stations', $data);
         $this->assertArrayHasKey('distances', $data);
         $this->assertEquals(['ST', 'Station Name'], $data['stations'][1]);
-        $this->assertEquals(10.5, $data['distances'][1][2]);
+        $this->assertEquals(10.5, $data['distances'][1][0][1]);
     }
 }
