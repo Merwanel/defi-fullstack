@@ -74,7 +74,7 @@ return function ($app) {
         return $response->withHeader('Content-Type', 'application/json');
     });
 
-    $app->get('/stats/distances', function (Request $request, Response $response) {
+    $app->get('/stats/distances', function (Request $request, Response $response) use ($app) {
         $from = $request->getQueryParams()['from'] ?? null;
         $to = $request->getQueryParams()['to'] ?? null;
         $groupBy = $request->getQueryParams()['groupBy'] ?? 'none';
@@ -125,25 +125,18 @@ return function ($app) {
                 ->withStatus(400);
         }
         
-        // #TODO : replace placeholder
+        $statsRepository = $app->getContainer()->get(\App\Repositories\StatsRepository::class);
+        $items = $statsRepository->getAggregatedDistances($from, $to, $groupBy);
+
+        foreach ($items as &$item) {
+            $item['totalDistanceKm'] = (float)$item['totalDistanceKm'];
+        }
+
         $payload = [
             'from' => $from,
             'to' => $to,
             'groupBy' => $groupBy,
-            'items' => [
-                [
-                    'analyticCode' => 'ANA-123',
-                    'totalDistanceKm' => 125.5,
-                    'periodStart' => '2025-11-01',
-                    'periodEnd' => '2025-11-30'
-                ],
-                [
-                    'analyticCode' => 'ANA-456',
-                    'totalDistanceKm' => 89.3,
-                    'periodStart' => '2025-11-01',
-                    'periodEnd' => '2025-11-30'
-                ]
-            ]
+            'items' => $items
         ];
 
         $response->getBody()->write(json_encode($payload));

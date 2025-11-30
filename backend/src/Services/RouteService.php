@@ -6,7 +6,8 @@ class RouteService
 {
     public function __construct(
         private DataLoader $dataLoader,
-        private PathFinder $pathFinder
+        private PathFinder $pathFinder,
+        private \App\Repositories\StatsRepository $statsRepository
     ) {}
 
     public function findRoute(int $fromStationId, int $toStationId, string $analyticCode): ?array
@@ -17,8 +18,17 @@ class RouteService
             return null;
         }
 
+        $routeId = 'route-' . uniqid();
+        $this->statsRepository->save(
+            $routeId,
+            (string)$fromStationId,
+            (string)$toStationId,
+            $analyticCode,
+            $result['totalDistance']
+        );
+
         return [
-            'id' => 'route-' . uniqid(),
+            'id' => $routeId,
             'fromStationId' => $fromStationId,
             'toStationId' => $toStationId,
             'analyticCode' => $analyticCode,

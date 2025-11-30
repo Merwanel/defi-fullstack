@@ -16,6 +16,7 @@ $builder->addDefinitions([
     },
     App\Repositories\StationRepository::class => \DI\autowire(),
     App\Repositories\DistanceRepository::class => \DI\autowire(),
+    App\Repositories\StatsRepository::class => \DI\autowire(),
     App\Services\PathFinder::class => \DI\autowire(),
     App\Services\DataLoader::class => \DI\autowire(),
     App\Services\RouteService::class => \DI\autowire(),
