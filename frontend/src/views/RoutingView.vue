@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { request } from '../client';
 import type { Route, RouteRequest } from '../types';
 import { useStations } from '../composables/useStations';
+import IteneraryView from './IteneraryView.vue';
 
 const { stations } = useStations();
 
@@ -68,13 +69,9 @@ async function submit() {
     <div v-if="error" class="error" role="alert">
       Error: {{ error }}
     </div>
-
-    <div v-if="result" class="result">
-      <h3>Result</h3>
-      <p><strong>Path:</strong> {{ result.path.join(' -> ') }}</p>
-      <p><strong>Distance:</strong> {{ result.distanceKm }} km</p>
-      <pre>{{ JSON.stringify(result, null, 2) }}</pre>
-    </div>
+    
+    <IteneraryView v-if="result" :result="result" />
+    
   </div>
 </template>
 
@@ -90,5 +87,4 @@ async function submit() {
   flex-direction: column;
 }
 .error { color: red; margin-top: 1rem; }
-.result { margin-top: 1rem; padding: 1rem; background: #f0f0f0; border-radius: 4px; }
 </style>

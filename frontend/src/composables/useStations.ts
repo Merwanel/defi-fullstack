@@ -3,6 +3,7 @@ import { request } from '../client';
 import type { Station } from '../types';
 
 const stations = ref<Station[]>([]);
+const stationsHashMap = ref<Map<string, Station>>(new Map());
 const error = ref<string | null>(null);
 
 export function useStations() {
@@ -10,6 +11,7 @@ export function useStations() {
         error.value = null;
         try {
             stations.value = await request<Station[]>('/stations');
+            stationsHashMap.value = new Map(stations.value.map(station => [station.id, station]));
         } catch (e: any) {
             error.value = e.message;
         }
@@ -17,6 +19,7 @@ export function useStations() {
 
     return {
         stations: readonly(stations),
+        stationsHashMap: readonly(stationsHashMap),
         error: readonly(error),
         fetchStations,
     };

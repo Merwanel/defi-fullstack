@@ -22,6 +22,10 @@ mockedUseStations.mockReturnValue({
         { id: 'A', shortName: 'A', longName: 'Station A' },
         { id: 'B', shortName: 'B', longName: 'Station B' }
     ]),
+    stationsHashMap: ref(new Map([
+        ['A', { id: 'A', shortName: 'A', longName: 'Station A' }],
+        ['B', { id: 'B', shortName: 'B', longName: 'Station B' }]
+    ])),
     loading: ref(false),
     error: ref(null)
 });
@@ -78,7 +82,7 @@ describe('RoutingView', () => {
         });
 
         await wrapper.find('form').trigger('submit');
-        // Wait for promises to resolve
+
         await new Promise(resolve => setTimeout(resolve, 0));
         await wrapper.vm.$nextTick();
 
@@ -92,7 +96,7 @@ describe('RoutingView', () => {
         (request as any).mockRejectedValue(new Error('Network Error'));
 
         await wrapper.find('form').trigger('submit');
-        // Wait for promises to resolve
+
         await new Promise(resolve => setTimeout(resolve, 0));
         await wrapper.vm.$nextTick();
 
