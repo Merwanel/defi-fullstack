@@ -30,7 +30,7 @@ return function ($app) {
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(400);
         }
-        
+
         $routeService = $app->getContainer()->get(\App\Services\RouteService::class);
         $route = $routeService->findRoute((int)$fromStationId, (int)$toStationId, $analyticCode);
 
@@ -49,6 +49,23 @@ return function ($app) {
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(201);
+    });
+
+    $app->get('/stations', function (Request $request, Response $response) use ($app) {
+        $dataLoader = $app->getContainer()->get(\App\Services\DataLoader::class);
+        $stationsDict = $dataLoader->load()['stations'];
+
+        $stations = [];
+        foreach ($stationsDict as $id => [$shortName, $longName]) {
+            $stations[] = [
+                'id' => $id,
+                'shortName' => $shortName,
+                'longName' => $longName
+            ];
+        }
+
+        $response->getBody()->write(json_encode($stations));
+        return $response->withHeader('Content-Type', 'application/json');
     });
 
     $app->get('/status', function (Request $request, Response $response) {

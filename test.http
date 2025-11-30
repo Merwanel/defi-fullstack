@@ -1,6 +1,9 @@
 ###  Status Endpoint
 GET http://localhost:8080/status
 
+###  Stations Endpoint
+GET http://localhost:8080/stations
+
 ###  Routes Endpoint - Valid Request
 POST http://localhost:8080/routes
 Content-Type: application/json
