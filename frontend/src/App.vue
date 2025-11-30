@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import RoutingView from './views/RoutingView.vue'
 import AnalyticsView from './views/AnalyticsView.vue'
+import { useStations } from './composables/useStations'
 
 const currentView = ref<'routing' | 'analytics'>('routing')
+const { fetchStations } = useStations()
+
+onMounted(() => {
+  fetchStations()
+})
 </script>
 
 <template>

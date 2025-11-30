@@ -29,6 +29,12 @@ export interface AnalyticDistanceList {
     items: AnalyticDistance[];
 }
 
+export interface Station {
+    id: string;
+    shortName: string;
+    longName: string;
+}
+
 export interface ApiError {
     code?: string;
     message: string;

@@ -2,6 +2,9 @@
 import { ref } from 'vue';
 import { request } from '../client';
 import type { Route, RouteRequest } from '../types';
+import { useStations } from '../composables/useStations';
+
+const { stations } = useStations();
 
 const form = ref<RouteRequest>({
   fromStationId: '',
@@ -36,12 +39,22 @@ async function submit() {
     <h2>Calculate Route</h2>
     <form @submit.prevent="submit" class="routing-form">
       <div class="form-group">
-        <label for="from">From Station ID:</label>
-        <input id="from" v-model="form.fromStationId" required />
+        <label for="from">From Station:</label>
+        <select id="from" v-model="form.fromStationId" required>
+          <option value="">-- Select Station --</option>
+          <option v-for="station in stations" :key="station.id" :value="station.id">
+            {{ station.shortName }} - {{ station.longName }}
+          </option>
+        </select>
       </div>
       <div class="form-group">
-        <label for="to">To Station ID:</label>
-        <input id="to" v-model="form.toStationId" required />
+        <label for="to">To Station:</label>
+        <select id="to" v-model="form.toStationId" required>
+          <option value="">-- Select Station --</option>
+          <option v-for="station in stations" :key="station.id" :value="station.id">
+            {{ station.shortName }} - {{ station.longName }}
+          </option>
+        </select>
       </div>
       <div class="form-group">
         <label for="analytic">Analytic Code:</label>

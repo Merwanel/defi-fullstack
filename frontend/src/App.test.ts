@@ -5,6 +5,6 @@ import App from './App.vue'
 describe('App.vue', () => {
   it('renders title', () => {
     const wrapper = mount(App)
-    expect(wrapper.text()).toContain('API Client')
+    expect(wrapper.text()).toContain('Your Itinerary')
   })
 })

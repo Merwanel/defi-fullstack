@@ -1,17 +1,36 @@
+
 import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { ref } from 'vue';
 import RoutingView from './RoutingView.vue';
 import { request } from '../client';
+
+const { mockedUseStations } = vi.hoisted(() => {
+    return { mockedUseStations: vi.fn() }
+});
 
 vi.mock('../client', () => ({
     request: vi.fn()
 }));
 
+vi.mock('../composables/useStations', () => ({
+    useStations: mockedUseStations
+}));
+
+mockedUseStations.mockReturnValue({
+    stations: ref([
+        { id: 'A', shortName: 'A', longName: 'Station A' },
+        { id: 'B', shortName: 'B', longName: 'Station B' }
+    ]),
+    loading: ref(false),
+    error: ref(null)
+});
+
 describe('RoutingView', () => {
     it('should render form fields', () => {
         const wrapper = mount(RoutingView);
-        expect(wrapper.find('input#from').exists()).toBe(true);
-        expect(wrapper.find('input#to').exists()).toBe(true);
+        expect(wrapper.find('select#from').exists()).toBe(true);
+        expect(wrapper.find('select#to').exists()).toBe(true);
         expect(wrapper.find('input#analytic').exists()).toBe(true);
         expect(wrapper.find('button[type="submit"]').exists()).toBe(true);
     });
@@ -19,8 +38,8 @@ describe('RoutingView', () => {
     it('should call request on submit', async () => {
         const wrapper = mount(RoutingView);
 
-        await wrapper.find('input#from').setValue('A');
-        await wrapper.find('input#to').setValue('B');
+        await wrapper.find('select#from').setValue('A');
+        await wrapper.find('select#to').setValue('B');
         await wrapper.find('input#analytic').setValue('CODE');
 
         (request as any).mockResolvedValue({
