@@ -8,36 +8,20 @@ use DI\ContainerBuilder;
 class RouteTest extends TestCase
 {
     private $app;
+    private $pdo;
 
     protected function setUp(): void
     {
-        require __DIR__ . '/../vendor/autoload.php';
-
         $builder = new ContainerBuilder();
         $builder->addDefinitions([
-            App\Repositories\StationRepository::class => function () {
-                return new class extends App\Repositories\StationRepository {
-                    public function __construct() {}
-                    public function findAll(): array {
-                        return [
-                            new App\Models\Station(1, 'MX', 'Mont-X'),
-                            new App\Models\Station(2, 'ST', 'Saint-T'),
-                            new App\Models\Station(3, 'ZW', 'Zweil'),
-                        ];
-                    }
-                };
+            PDO::class => function () {
+                $pdo = new PDO('sqlite::memory:');
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                return $pdo;
             },
-            App\Repositories\DistanceRepository::class => function () {
-                return new class extends App\Repositories\DistanceRepository {
-                    public function __construct() {}
-                    public function findAll(): array {
-                        return [
-                            new App\Models\Distance(1, 'line', 1, 2, 10.0),
-                            new App\Models\Distance(2, 'line', 2, 3, 35.5),
-                        ];
-                    }
-                };
-            },
+            App\Repositories\StationRepository::class => \DI\autowire(),
+            App\Repositories\DistanceRepository::class => \DI\autowire(),
+            App\Repositories\StatsRepository::class => \DI\autowire(),
             App\Services\DataLoader::class => \DI\autowire(),
             App\Services\PathFinder::class => \DI\autowire(),
             App\Services\RouteService::class => \DI\autowire(),
@@ -48,11 +32,51 @@ class RouteTest extends TestCase
         $this->app = AppFactory::create();
         $this->app->addBodyParsingMiddleware();
 
-        $registerRoutes = require __DIR__ . '/../src/routes.php';
+        $registerRoutes = require __DIR__ . '/../../src/routes.php';
         $registerRoutes($this->app);
+
+        $this->pdo = $container->get(PDO::class);
+        $this->setupDatabase();
     }
 
-    private function getResponseForRoutesRequest($fromStationId, $toStationId, $analyticCode) : mixed 
+
+    private function setupDatabase(): void
+    {
+        // Manually run migrations by instantiating the migration classes
+        $adapter = new \Phinx\Db\Adapter\SQLiteAdapter(['connection' => $this->pdo]);
+        $adapter->setConnection($this->pdo);
+
+        require_once __DIR__ . '/../../db/migrations/20251125224649_create_stations_table.php';
+        /** @phpstan-ignore-next-line */
+        $stationsMigration = new \CreateStationsTable('20251125224649', '20251125224649');
+        $stationsMigration->setAdapter($adapter);
+        $stationsMigration->change();
+
+        require_once __DIR__ . '/../../db/migrations/20251126000629_create_distances_table.php';
+        /** @phpstan-ignore-next-line */
+        $distancesMigration = new \CreateDistancesTable('20251126000629', '20251126000629');
+        $distancesMigration->setAdapter($adapter);
+        $distancesMigration->change();
+
+        require_once __DIR__ . '/../../db/migrations/20251130100132_create_stats_table.php';
+        /** @phpstan-ignore-next-line */
+        $statsMigration = new \CreateStatsTable('20251130100132', '20251130100132');
+        $statsMigration->setAdapter($adapter);
+        $statsMigration->change();
+
+        $this->pdo->exec("
+            INSERT INTO stations (id, short_name, long_name) VALUES 
+            (1, 'MX', 'Mont-X'),
+            (2, 'ST', 'Saint-T'),
+            (3, 'ZW', 'Zweil');
+            
+            INSERT INTO distances (line_name, parent_id, child_id, distance) VALUES 
+            ('line', 1, 2, 10.0),
+            ('line', 2, 3, 35.5);
+        ");
+    }
+
+    private function getResponseForRoutesRequest($fromStationId, $toStationId, $analyticCode): mixed
     {
         $factory = new ServerRequestFactory();
         $request = $factory->createServerRequest('POST', '/routes');
@@ -61,21 +85,21 @@ class RouteTest extends TestCase
             'toStationId' => $toStationId,
             'analyticCode' => $analyticCode
         ]);
-        
+
         $response = $this->app->handle($request);
-        $body = json_decode((string)$response->getBody(), true);
+        $body = json_decode((string) $response->getBody(), true);
 
         return [$response, $body];
     }
 
-    
+
     public function testStatus()
     {
         $factory = new ServerRequestFactory();
         $request = $factory->createServerRequest('GET', '/status');
-        
+
         $response = $this->app->handle($request);
-        $body = json_decode((string)$response->getBody(), true);
+        $body = json_decode((string) $response->getBody(), true);
 
         $this->assertEquals('ok', $body['status']);
     }
