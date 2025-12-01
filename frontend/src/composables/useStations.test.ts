@@ -23,7 +23,7 @@ describe('useStations', () => {
             { id: '2', shortName: 'ST2', longName: 'Station Two' },
         ];
 
-        (request as any).mockResolvedValue(mockStations);
+        vi.mocked(request).mockResolvedValue(mockStations);
 
         const { stations, error, fetchStations } = useStations();
 
@@ -40,7 +40,7 @@ describe('useStations', () => {
 
     it('should handle error during fetch', async () => {
         const errorMessage = 'Network Error';
-        (request as any).mockRejectedValue(new Error(errorMessage));
+        vi.mocked(request).mockRejectedValue(new Error(errorMessage));
 
         const { error, fetchStations } = useStations();
 

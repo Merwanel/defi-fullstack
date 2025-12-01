@@ -12,8 +12,8 @@ export function useStations() {
         try {
             stations.value = await request<Station[]>('/stations');
             stationsHashMap.value = new Map(stations.value.map(station => [station.id, station]));
-        } catch (e: any) {
-            error.value = e.message;
+        } catch (e: unknown) {
+            error.value = e instanceof Error ? e.message : 'An error occurred';
         }
     }
 

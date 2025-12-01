@@ -23,8 +23,8 @@ async function submit() {
 
   try {
     result.value = await request<AnalyticDistanceList>(`/stats/distances?${params.toString()}`);
-  } catch (e: any) {
-    error.value = e.message;
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : 'An error occurred';
   } finally {
     loading.value = false;
   }

@@ -27,7 +27,7 @@ export async function request<T>(path: string, options: RequestInit = {}): Promi
             if (errorBody.message) {
                 errorMessage = errorBody.message;
             }
-        } catch (e) {
+        } catch {
             // Ignore JSON parse error
         }
         throw new Error(errorMessage);

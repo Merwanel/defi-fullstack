@@ -47,7 +47,7 @@ describe('RoutingView', () => {
         await wrapper.find('select#to').setValue('B');
         await wrapper.find('select#analytic').setValue('fret');
 
-        (request as any).mockResolvedValue({
+        vi.mocked(request).mockResolvedValue({
             id: '1',
             fromStationId: 'A',
             toStationId: 'B',
@@ -72,7 +72,7 @@ describe('RoutingView', () => {
     it('should display result on success', async () => {
         const wrapper = mount(RoutingView);
 
-        (request as any).mockResolvedValue({
+        vi.mocked(request).mockResolvedValue({
             id: '1',
             fromStationId: 'A',
             toStationId: 'B',
@@ -94,7 +94,7 @@ describe('RoutingView', () => {
     it('should display error on failure', async () => {
         const wrapper = mount(RoutingView);
 
-        (request as any).mockRejectedValue(new Error('Network Error'));
+        vi.mocked(request).mockRejectedValue(new Error('Network Error'));
 
         await wrapper.find('form').trigger('submit');
 

@@ -11,3 +11,7 @@ coverage/
 .phpunit.result.cache
 *.xml
 !phpunit.xml
+
+#cache
+.eslintcache
+*cache

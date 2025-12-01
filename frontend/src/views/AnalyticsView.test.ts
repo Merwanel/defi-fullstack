@@ -52,7 +52,8 @@ describe('AnalyticsView', () => {
             expect.stringContaining('/stats/distances?')
         );
 
-        const callArg = vi.mocked(client.request).mock.calls[0][0] as string;
+        const callArg = vi.mocked(client.request).mock.calls[0]?.[0] as string;
+        expect(callArg).toBeDefined();
         expect(callArg).toContain('from=2024-01-01');
         expect(callArg).toContain('to=2024-12-31');
         expect(callArg).toContain('groupBy=month');
@@ -71,7 +72,8 @@ describe('AnalyticsView', () => {
         await wrapper.find('form').trigger('submit.prevent');
         await wrapper.vm.$nextTick();
 
-        const callArg = vi.mocked(client.request).mock.calls[0][0] as string;
+        const callArg = vi.mocked(client.request).mock.calls[0]?.[0] as string;
+        expect(callArg).toBeDefined();
         expect(callArg).toBe('/stats/distances?');
     });
 
