@@ -27,6 +27,10 @@ jobs:
     - name: Install dependencies
       working-directory: ./frontend
       run: npm ci
+
+    - name: Run npm audit
+      working-directory: ./frontend
+      run: npm audit
     
     - name: Run type check
       working-directory: ./frontend
