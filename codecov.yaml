@@ -1,12 +1,10 @@
-codecov:
-  require_ci_to_pass: yes
-
 coverage:
   status:
     project:
       default:
         target: auto
         threshold: 1%
+    patch:
       backend:
         target: auto
         threshold: 1%
@@ -17,15 +15,12 @@ coverage:
         threshold: 1%
         flags:
           - frontend
-    patch:
-      default:
-        target: 80%
-        threshold: 1%
-        informational: true
+
+github_checks:
+    annotations: true
 
 comment:
-  layout: "diff, flags, files"
-  behavior: default
+  layout: "newheader, diff, flags, files"
   require_changes: false
   require_base: false
   require_head: true
@@ -33,10 +28,10 @@ comment:
 
 flags:
   backend:
+    carryforward: true
     paths:
       - backend/
-    carryforward: true
   frontend:
+    carryforward: true
     paths:
       - frontend/
-    carryforward: true
