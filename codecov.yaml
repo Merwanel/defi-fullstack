@@ -1,0 +1,50 @@
+flag_management:
+  default_rules:
+    carryforward: true
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+  individual_flags:
+    - name: backend
+      paths:
+        - backend/**
+      carryforward: true
+      statuses:
+        - type: project
+          target: auto
+          threshold: 1%
+        - type: patch
+          target: 80%
+    - name: frontend
+      paths:
+        - frontend/**
+      carryforward: true
+      statuses:
+        - type: project
+          target: auto
+          threshold: 1%
+        - type: patch
+          target: 80%
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+      backend:
+        target: auto
+        threshold: 1%
+        flags:
+          - backend
+      frontend:
+        target: auto
+        threshold: 1%
+        flags:
+          - frontend
+
+comment:
+  layout: "diff, flags, files"
+  behavior: default
+  require_changes: false

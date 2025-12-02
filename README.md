@@ -3,6 +3,7 @@
 | | Tests | Coverage |
 |---------|-------|----------|
 | **Backend** | [![Backend Tests](https://github.com/Merwanel/defi-fullstack/actions/workflows/backend-test-build-push.yaml/badge.svg)](https://github.com/Merwanel/defi-fullstack/actions/workflows/backend-test-build-push.yaml) | [![codecov](https://codecov.io/gh/Merwanel/defi-fullstack/branch/main/graph/badge.svg?flag=backend)](https://codecov.io/gh/Merwanel/defi-fullstack) |
+| **Frontend** | [![Frontend Tests](https://github.com/Merwanel/defi-fullstack/actions/workflows/frontend-test-build-push.yaml/badge.svg)](https://github.com/Merwanel/defi-fullstack/actions/workflows/frontend-test-build-push.yaml) | [![codecov](https://codecov.io/gh/Merwanel/defi-fullstack/branch/main/graph/badge.svg?flag=frontend)](https://codecov.io/gh/Merwanel/defi-fullstack) |
 
 Bienvenue dans notre défi technique !  
 Avant même l’envoi de ton CV, nous te proposons de passer par cette étape pratique. Pourquoi ? Parce que nous croyons que **le code parle plus fort que les mots**.
