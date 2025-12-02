@@ -11,32 +11,63 @@ services:
       - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
+    image: ghcr.io/merwanel/defi-fullstack-backend:latest
+    pull_policy: missing
     build:
       context: ./backend
+    depends_on:
+      mariadb:
+        condition: service_healthy
     container_name: backend_app
     ports:
       - "8080:80"
     volumes:
       - ./backend:/var/www/html
-    depends_on:
-      - mariadb
     environment:
       DB_HOST: mariadb
       DB_PORT: 3306
       DB_NAME: development_db
       DB_USER: app_user
       DB_PASSWORD: app_password
+    healthcheck:
+      test: [ "CMD", "php", "-r", "file_get_contents('http://localhost/api/v1/status') !== false || exit(1);" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   frontend:
+    image: ghcr.io/merwanel/defi-fullstack-frontend:latest
+    pull_policy: missing
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    depends_on:
+      backend:
+        condition: service_healthy
     container_name: frontend_app
     ports:
-      - "80:80"
+      - "3000:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  success-message:
+    image: alpine:latest
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    command: sh -c "echo 'Backend is up at http://localhost:8080/status' && echo 'Frontend is up at http://localhost:3000'"
 
 volumes:
   mariadb_data:

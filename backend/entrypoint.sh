@@ -18,7 +18,7 @@ echo "Running migrations..."
 
 # Run seeds
 echo "Running seeds..."
-./vendor/bin/phinx seed:run -e development
+./vendor/bin/phinx seed:run -e development || true
 
 echo "Starting Apache..."
 # Start Apache
