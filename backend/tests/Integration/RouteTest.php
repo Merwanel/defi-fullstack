@@ -6,7 +6,7 @@ class RouteTest extends IntegrationTestCase
 {
     public function testStatus()
     {
-        [$response, $body] = $this->makeRequest('GET', '/status');
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/status');
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeaderLine('Content-Type'));
@@ -15,7 +15,7 @@ class RouteTest extends IntegrationTestCase
 
     public function testPostRoutesSuccess()
     {
-        [$response, $body] = $this->makeRequest('POST', '/routes', [
+        [$response, $body] = $this->makeRequest('POST', '/api/v1/routes', [
             'fromStationId' => '1',
             'toStationId' => '3',
             'analyticCode' => 'ANA-123'
@@ -32,7 +32,7 @@ class RouteTest extends IntegrationTestCase
 
     public function testPostRoutesMissingFields()
     {
-        [$response, $body] = $this->makeRequest('POST', '/routes', [
+        [$response, $body] = $this->makeRequest('POST', '/api/v1/routes', [
             'fromStationId' => 'MX',
             'toStationId' => null,
             'analyticCode' => null
@@ -47,7 +47,7 @@ class RouteTest extends IntegrationTestCase
 
     public function testPostRoutesNotFound()
     {
-        [$response, $body] = $this->makeRequest('POST', '/routes', [
+        [$response, $body] = $this->makeRequest('POST', '/api/v1/routes', [
             'fromStationId' => '1',
             'toStationId' => '999',
             'analyticCode' => 'TEST-404'

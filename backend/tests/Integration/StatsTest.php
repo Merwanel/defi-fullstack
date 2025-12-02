@@ -21,7 +21,7 @@ class StatsTest extends IntegrationTestCase
 
     public function testGetStatsDistancesNoFilters()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stats/distances');
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances');
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertArrayHasKey('items', $body);
@@ -36,7 +36,7 @@ class StatsTest extends IntegrationTestCase
 
     public function testGetStatsDistancesGroupByDay()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stats/distances', null, [
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances', null, [
             'groupBy' => 'day'
         ]);
 
@@ -62,7 +62,7 @@ class StatsTest extends IntegrationTestCase
 
     public function testGetStatsDistancesGroupByMonth()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stats/distances', null, [
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances', null, [
             'groupBy' => 'month'
         ]);
 
@@ -88,7 +88,7 @@ class StatsTest extends IntegrationTestCase
 
     public function testGetStatsDistancesGroupByYear()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stats/distances', null, [
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances', null, [
             'groupBy' => 'year'
         ]);
 
@@ -107,7 +107,7 @@ class StatsTest extends IntegrationTestCase
 
     public function testGetStatsDistancesWithDateRange()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stats/distances', null, [
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances', null, [
             'from' => '2024-01-01',
             'to' => '2024-01-31'
         ]);
@@ -127,7 +127,7 @@ class StatsTest extends IntegrationTestCase
 
     public function testGetStatsDistancesInvalidFromDate()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stats/distances', null, [
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances', null, [
             'from' => 'invalid-date'
         ]);
 
@@ -138,7 +138,7 @@ class StatsTest extends IntegrationTestCase
 
     public function testGetStatsDistancesInvalidToDate()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stats/distances', null, [
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances', null, [
             'to' => 'not-a-date'
         ]);
 
@@ -149,7 +149,7 @@ class StatsTest extends IntegrationTestCase
 
     public function testGetStatsDistancesInvalidDateRange()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stats/distances', null, [
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances', null, [
             'from' => '2024-12-31',
             'to' => '2024-01-01'
         ]);
@@ -160,7 +160,7 @@ class StatsTest extends IntegrationTestCase
 
     public function testGetStatsDistancesInvalidGroupBy()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stats/distances', null, [
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances', null, [
             'groupBy' => 'invalid'
         ]);
 
@@ -173,7 +173,7 @@ class StatsTest extends IntegrationTestCase
         $validGroupBy = ['day', 'month', 'year', 'none'];
 
         foreach ($validGroupBy as $groupBy) {
-            [$response, $body] = $this->makeRequest('GET', '/stats/distances', null, [
+            [$response, $body] = $this->makeRequest('GET', '/api/v1/stats/distances', null, [
                 'groupBy' => $groupBy
             ]);
 

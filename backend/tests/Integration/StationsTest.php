@@ -6,7 +6,7 @@ class StationsTest extends IntegrationTestCase
 {
     public function testGetStations()
     {
-        [$response, $body] = $this->makeRequest('GET', '/stations');
+        [$response, $body] = $this->makeRequest('GET', '/api/v1/stations');
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertCount(3, $body);
