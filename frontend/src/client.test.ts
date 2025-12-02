@@ -10,7 +10,7 @@ vi.mock('./composables/useApi', () => {
     };
 });
 
-global.fetch = vi.fn();
+globalThis.fetch = vi.fn();
 
 describe('client', () => {
     beforeEach(() => {
@@ -20,14 +20,14 @@ describe('client', () => {
     });
 
     it('should make a request to the correct URL', async () => {
-        vi.mocked(global.fetch).mockResolvedValue({
+        vi.mocked(globalThis.fetch).mockResolvedValue({
             ok: true,
             json: async () => ({ data: 'test' }),
         } as Response);
 
         await request('/test');
 
-        expect(global.fetch).toHaveBeenCalledWith('/api/v1/test', expect.objectContaining({
+        expect(globalThis.fetch).toHaveBeenCalledWith('/api/v1/test', expect.objectContaining({
             headers: expect.any(Headers)
         }));
     });
@@ -36,20 +36,20 @@ describe('client', () => {
         const { token } = useApi();
         token.value = 'my-token';
 
-        vi.mocked(global.fetch).mockResolvedValue({
+        vi.mocked(globalThis.fetch).mockResolvedValue({
             ok: true,
             json: async () => ({}),
         } as Response);
 
         await request('/test');
 
-        const call = vi.mocked(global.fetch).mock.calls[0];
+        const call = vi.mocked(globalThis.fetch).mock.calls[0];
         const headers = call?.[1]?.headers as Headers;
         expect(headers.get('Authorization')).toBe('Bearer my-token');
     });
 
     it('should throw error on non-ok response', async () => {
-        vi.mocked(global.fetch).mockResolvedValue({
+        vi.mocked(globalThis.fetch).mockResolvedValue({
             ok: false,
             status: 400,
             json: async () => ({ message: 'Bad Request' }),
@@ -59,7 +59,7 @@ describe('client', () => {
     });
 
     it('should handle 204 No Content', async () => {
-        vi.mocked(global.fetch).mockResolvedValue({
+        vi.mocked(globalThis.fetch).mockResolvedValue({
             ok: true,
             status: 204,
             json: async () => ({}),
