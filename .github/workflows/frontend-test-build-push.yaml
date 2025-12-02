@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'frontend/**'
-      - '.github/workflows/frontend-tests-push.yml'
+      - '.github/workflows/frontend-test-build-push.yaml'
 
 jobs:
   frontend-test:
@@ -52,8 +52,8 @@ jobs:
 
   frontend-build-and-push:
     needs: frontend-test
-    uses: ./.github/workflows/docker-build.yml
+    uses: ./.github/workflows/docker-build-push.yml
     with:
       service: frontend
     secrets:
-      personal-access-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      personal-access-token: ${{ secrets.PAT }}
