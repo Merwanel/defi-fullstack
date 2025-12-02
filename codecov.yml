@@ -15,23 +15,7 @@ coverage:
         threshold: 1%
         flags:
           - frontend
-
-github_checks:
-    annotations: true
-
-comment:
   layout: "newheader, diff, flags, files"
   require_changes: false
   require_base: false
-  require_head: true
   show_carryforward_flags: true
-
-flags:
-  backend:
-    carryforward: true
-    paths:
-      - backend/
-  frontend:
-    carryforward: true
-    paths:
-      - frontend/

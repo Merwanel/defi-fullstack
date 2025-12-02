@@ -18,7 +18,9 @@ jobs:
       checks: write
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
     
     - name: Setup PHP with composer
       uses: shivammathur/setup-php@v2
@@ -40,7 +42,7 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./backend/coverage.xml
+        files: ./backend/coverage.xml,./backend/junit.xml
         flags: backend
         name: backend-coverage
 
