@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use App\Services\DataLoader;
+use App\Services\CacheService;
 use App\Repositories\StationRepository;
 use App\Repositories\DistanceRepository;
 use App\Models\Station;
@@ -13,6 +14,10 @@ class DataLoaderTest extends TestCase
     {
         $stationRepo = $this->createMock(StationRepository::class);
         $distanceRepo = $this->createMock(DistanceRepository::class);
+        $mockCache = $this->createMock(CacheService::class);
+
+        $mockCache->method('get')->willReturn(null);
+        $mockCache->method('set')->willReturn(true);
 
         $stationRepo->method('findAll')->willReturn([
             new Station(1, 'ST', 'Station Name')
@@ -22,7 +27,7 @@ class DataLoaderTest extends TestCase
             new Distance(1, 'line', 1, 2, 10.5)
         ]);
 
-        $loader = new DataLoader($stationRepo, $distanceRepo);
+        $loader = new DataLoader($stationRepo, $distanceRepo, $mockCache);
         $data = $loader->load();
 
         $this->assertIsArray($data);

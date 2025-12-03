@@ -20,6 +20,12 @@ abstract class IntegrationTestCase extends TestCase
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 return $pdo;
             },
+            App\Services\CacheService::class => function () {
+                $mock = $this->createMock(App\Services\CacheService::class);
+                $mock->method('get')->willReturn(null);
+                $mock->method('set')->willReturn(true);
+                return $mock;
+            },
             App\Repositories\StationRepository::class => \DI\autowire(),
             App\Repositories\DistanceRepository::class => \DI\autowire(),
             App\Repositories\StatsRepository::class => \DI\autowire(),

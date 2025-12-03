@@ -2,12 +2,17 @@
 
 use PHPUnit\Framework\TestCase;
 use App\Services\PathFinder;
+use App\Services\CacheService;
 
 class PathFinderTest extends TestCase
 {
     public function testFindShortestPathSuccess()
     {
-        $finder = new PathFinder();
+        $mockCache = $this->createMock(CacheService::class);
+        $mockCache->method('get')->willReturn(null);
+        $mockCache->method('set')->willReturn(true);
+
+        $finder = new PathFinder($mockCache);
         $distances = [
             1 => [[2, 10.0], [3, 20.0]],
             2 => [[3, 5.0]]
@@ -22,7 +27,11 @@ class PathFinderTest extends TestCase
 
     public function testFindShortestPathFailure()
     {
-        $finder = new PathFinder();
+        $mockCache = $this->createMock(CacheService::class);
+        $mockCache->method('get')->willReturn(null);
+        $mockCache->method('set')->willReturn(true);
+
+        $finder = new PathFinder($mockCache);
         $distances = [
             1 => [[2, 10.0]],
             3 => [[4, 10.0]]
