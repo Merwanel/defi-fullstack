@@ -2,20 +2,25 @@ coverage:
   status:
     project:
       default:
-        target: auto
-        threshold: 1%
+        target: 80%
     patch:
-      backend:
-        target: auto
-        threshold: 1%
-        flags:
-          - backend
       frontend:
-        target: auto
-        threshold: 1%
+        threshold: 0.01%
         flags:
           - frontend
-  layout: "newheader, diff, flags, files"
-  require_changes: false
-  require_base: false
-  show_carryforward_flags: true
+      backend:
+        flags:
+          - backend 
+
+github_checks:
+    annotations: true
+  
+flags:
+  frontend:
+    carryforward: true
+    paths: 
+      - frontend/
+  backend:
+    carryforward: true
+    paths: 
+      - backend/
