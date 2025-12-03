@@ -36,6 +36,8 @@ services:
       DB_NAME: development_db
       DB_USER: app_user
       DB_PASSWORD: app_password
+      REDIS_HOST: redis-cache
+      REDIS_PORT: 6379
     healthcheck:
       test: [ "CMD", "php", "-r", "file_get_contents('http://localhost/api/v1/status') !== false || exit(1);" ]
       interval: 10s
@@ -60,6 +62,17 @@ services:
       timeout: 5s
       retries: 5
 
+  redis-cache:
+    image: redis:8.4.0-alpine3.22
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      retries: 3
+      start_period: 5s
+    volumes:
+      - redis_data:/data
+
   success-message:
     image: alpine:latest
     depends_on:
@@ -71,3 +84,4 @@ services:
 
 volumes:
   mariadb_data:
+  redis_data:
