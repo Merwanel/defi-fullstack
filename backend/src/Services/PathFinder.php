@@ -19,7 +19,6 @@ class PathFinder
     {
         $cacheKey = "path:{$startId}:{$endId}";
 
-        // Try to get from cache
         $cached = $this->cache->get($cacheKey);
         if ($cached !== null) {
             return $cached;
@@ -79,7 +78,6 @@ class PathFinder
             'totalDistance' => $dist[$endId]
         ];
 
-        // Save to cache
         $this->cache->set($cacheKey, $result, null);
 
         return $result;
