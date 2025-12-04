@@ -7,6 +7,8 @@ on:
     paths:
       - 'frontend/**'
       - '.github/workflows/frontend-test-build-push.yaml'
+      - 'docker-build-push.yml'
+      - 'actions/calver/actions.yml'
 
 jobs:
   frontend-test:

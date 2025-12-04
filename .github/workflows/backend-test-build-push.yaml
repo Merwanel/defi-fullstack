@@ -6,6 +6,8 @@ on:
     paths:
       - 'backend/**'
       - '.github/workflows/backend-test-build-push.yaml'
+      - 'docker-build-push.yml'
+      - 'actions/calver/actions.yml'
   
 jobs:
   backend-tests:
