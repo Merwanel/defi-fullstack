@@ -5,143 +5,86 @@
 | **Backend** | [![Backend Tests](https://github.com/Merwanel/defi-fullstack/actions/workflows/backend-test-build-push.yaml/badge.svg)](https://github.com/Merwanel/defi-fullstack/actions/workflows/backend-test-build-push.yaml) | [![codecov](https://codecov.io/gh/Merwanel/defi-fullstack/branch/main/graph/badge.svg?flag=backend)](https://codecov.io/gh/Merwanel/defi-fullstack) |
 | **Frontend** | [![Frontend Tests](https://github.com/Merwanel/defi-fullstack/actions/workflows/frontend-test-build-push.yaml/badge.svg)](https://github.com/Merwanel/defi-fullstack/actions/workflows/frontend-test-build-push.yaml) | [![codecov](https://codecov.io/gh/Merwanel/defi-fullstack/branch/main/graph/badge.svg?flag=frontend)](https://codecov.io/gh/Merwanel/defi-fullstack) |
 
-Bienvenue dans notre défi technique !  
-Avant même l’envoi de ton CV, nous te proposons de passer par cette étape pratique. Pourquoi ? Parce que nous croyons que **le code parle plus fort que les mots**.
+## Résumé du défi :
+Coder un PHP backend et un frontend Vue.js utilisant une API spécifiée dans `openapi.yaml`.
 
-Ce défi est ton ticket d’entrée : il te permet de nous montrer l’étendue de tes capacités à **collaborer, analyser et livrer du code de qualité**. Tu le réalises chez toi, dans ton environnement, avec tes outils, mais l’objectif est de voir comment tu t’adaptes à notre culture technique et à nos pratiques **DevSecOps**.
+## Sommaire
+- [1. Instructions](#1-instructions)
+- [2. Architecture & Choix Techniques](#2-architecture--choix-techniques)
+- [3. Améliorations](#3-améliorations)
+- [4. Outils & Méthodologie](#4-outils--méthodologie)
 
----
+## 1. Instructions
 
-## 🤝 Esprit du défi
-Ce défi est autant une **démonstration de tes compétences** qu’une **simulation de collaboration** dans notre environnement.  
-Nous ne cherchons pas la perfection : nous voulons voir ta capacité à t’approprier un contexte technique exigeant, à produire du code de qualité et à réfléchir comme un membre de l’équipe.
+Pour lancer l'application complète (Backend + Frontend + Base de données + Redis) :
 
-Tu es invité à démontrer ta capacité à :
-- Travailler avec des outils similaires aux nôtres (**Docker, Composer, GitLab, PHPUnit**, etc.)
-- Appliquer des pratiques comme **l’analyse statique**, le **TDD**, le **DDD** et l’**intégration/déploiement continus**
-- Produire un code **propre, maintenable et réfléchi**, comme si tu faisais déjà partie de l’équipe
+```bash
+docker compose up -d
+```
 
-> 💡 Conseil : documente tes choix, structure ton code et montre-nous comment tu raisonnes. C’est tout aussi important que le résultat final.
+L'application sera accessible aux adresses suivantes :
+*   **Frontend :** http://localhost:5173
+*   **Backend API :** http://localhost:8080
 
----
+Pour arrêter l'application :
 
-## 🧩 Notre environnement
-Nous produisons des applications web modernes, sécurisées et performantes, en utilisant principalement :
-- **Backend** : PHP 8 (Symfony 7 et CakePHP 5)
-- **Frontend** : Vue.js 3 + Vuetify 3 + TypeScript
-- **Tests** : PHPUnit, Vitest, Jest
-- **Linter** : PHPCS, ESLint, Prettier
-- **UI/UX** : Storybook
-- **Base de données** : PostgreSQL ou MariaDB
-- **Infrastructure** : Docker, Docker Compose, TeamCity (CI/CD), Gitlab (code versioning)
-- **Méthodologies** : TDD, DDD, XP
+```bash
+docker compose down
+```
 
-> 💡 Conseil : inspire-toi de nos pratiques et de nos outils.
+Pour reconstruire les images (au lieu de les télécharger depuis ghcr.io) :
 
----
+```bash
+docker compose up -d --build
+```
 
-# 🧾 Instructions pour réaliser le défi
-Tu dois réaliser une solution à minimum deux niveaux. Un backend PHP 8 exposant une API REST conforme à la spécification OpenAPI fournie ainsi qu'un frontend TypeScript consommant cette API.
+## 2. Architecture & Choix Techniques
 
-## Le contexte
-Dans le métier de la circulation ferroviaire, les trajets de chaque train sont répertoriés dans un système de gestion du trafic. Un train circule sur une ligne, ces lignes sont parfois connectées, permettant à un train de circuler sur plusieurs lignes.
-Chaque trajet est associé à un code analytique, qui permet de catégoriser le type de trajet (ex : fret, passager, maintenance, etc.).
-Les données de statistiques générées sont ensuite utilisées pour diverses analyses.
+*   **Stack** : **Vue.js 3** , **TypeScript** ,  **PHP (Slim)** , **MariaDB** , **Redis**
+*   **Endpoints** :
+    *   `GET /api/v1/status` : Healthcheck.
+    *   `GET /api/v1/stations` : Liste des stations.
+    *   `POST /api/v1/routes` : Calcul d'itinéraire.
+    *   `GET /api/v1/stats/distances` : Statistiques agrégées.
 
-## Le besoin métier
-La solution doit permettre à l'utilisateur de calculer une distance entre deux stations de train. La liste des stations ainsi que les distances entre les stations sont fournies dans les fichiers `stations.json` et `distances.json`.
+*   **Slim Framework** : Nécessite moins de boilerplate que PHP vanilla et présente moins d'overhead comparé à un framework complet comme Laravel.
 
-Tu peux choisir de persister les saisies des utilisateurs, cela t'aidera à compléter les points Bonus (voir ci-dessous), mais ce n'est pas obligatoire.
+*   **CI / CD :** Le frontend et backend disposent de workflows (CI/CD) différents. Tant que le contrat d'interface (API) est respecté, les deux peuvent évoluer indépendamment.
 
-Il se peut que tu aies des questions ou des incertitudes sur la compréhension du besoin, dans ce cas, tu es libre de faire des hypothèses raisonnables et de les documenter.
+*   **Docker Compose :** Les services backend et frontend essaieront de pull leur image depuis ghcr.io/merwanel/ . Si elles ne sont pas disponibles, elles seront construites localement. 
 
-> 💡 Conseil : applique le principe fondamental de [qualité du craftsmanship](https://fr.wikipedia.org/wiki/Software_craftsmanship#Fondamentalement_:_un_retour_non_r%C3%A9f%C3%A9renc%C3%A9_%C3%A0_XP).
+*   **Résilience Redis :** Le cache gère les échecs de connexion de manière silencieuse et retente la connexion à chaque utilisation. Par conséquent, dans le `docker-compose.yml` le service redis peut être lancé en parallèle des autres services.
 
-## Livrables attendus
-Lorsque tu as terminé, envoie à n.girardet[at]mob[point]ch, ton dossier de candidature complet ainsi qu'un lien vers le projet contenant :
-- Le projet prêt à déployer, au format que tu préfères : un repo GitHub avec un docker-compose, une image publiée dans un registre, un fichier zip dans une release GitHub...
-- Les instructions de déploiement claires
-- L'accès au repository du code source, y compris l'historique des commits
+*   **GET stations/** `openapi.yaml` ne spécifie pas de endpoint pour récupérer la liste des stations. `stations.json` pourrait être rajouté au frontend, mais ça ferait deux sources de vérité. C'est pourquoi j'ai ajouté un endpoint `GET stations/` qui retourne la liste des stations.
 
-> ⚠️ Assure-toi qu'un lien vers ton projet est visible et actif dans ton e-mail. 👉 Nous ne traiterons pas les dossiers de candidatures avant d'avoir vu le code.
+*   **DataLoader** : Le frontend a besoin des stations et le backend a besoin du graph des distances. Pour cela, un dataloader charge ces données au démarrage de l'application.
 
-## ⏳ Durée du défi
+*   **PHP est Stateless** : Le bon côté est que PHP est résilient aux mauvais codes, le mauvais côté est que le dataloader communique avec la base de données à chaque requête. Donc j'ai mis en cache ces données avec **Redis**, sans TTL puisque celles-ci sont statiques.
 
-Tu n’as aucune limite de temps pour réaliser ce défi. Avance à ton rythme, prends le temps de réfléchir et de coder comme tu le souhaites. Ce repository restera ouvert tant que nous n’aurons pas trouvé la bonne personne pour rejoindre l’équipe. Une fois que ce sera le cas, nous le fermerons.
+*   **Dijkstra** : Redis était déjà implémenté, j'en ai profité pour mettre en cache les itinéraires calculés.
 
-> 💡 Même si la vitesse n’est pas un critère, nous examinerons les candidatures dans l’ordre où elles nous parviennent.
+*   **Commentaires** : J'ai pris le parti de mettre peu de commentaires dans le code. Je préfère un code qui se documente par lui-même qu'un amas de commentaires.
 
-## Et après ?
-Nous procéderons à une revue de ton code et nous te contacterons pour t'informer de la suite.
+## 3. Améliorations
 
-> 🚫 N'envoie pas de fichiers volumineux (ex : 30 Mo) par e-mail
+*   **Meilleure UX:**
+    *   Actuellement, dans le frontend, n'importe quel couple de stations de départ et d'arrivée est proposé. Par conséquent, l'utilisateur peut choisir une station de départ et une station d'arrivée sans itinéraire possible. Il faudrait pré-calculer les stations atteignables depuis chaque station pour améliorer l'expérience utilisateur.
 
----
+*   **Optimisation Connexion Redis :** PHP se reconnecte en TCP à chaque requête, `pconnect` pourrait réduire les ressources gaspillées.
 
-## 🎯 Objectifs
+*   **Stratégies de Scalabilité & Algorithmes :**
+    *   **Graphe Statique :** Actuellement, le graphe que dessine le réseau de train est statique. J'aurais donc pu pré-calculer tous les plus courts chemins avec l'algorithme de Floyd-Warshall. Néanmoins, en utilisant Dijkstra couplé à Redis, comme je le fais, cela revient au même. Dijkstra + Redis est en quelque sorte une version lazy de Floyd-Warshall.
+    *   **Graphe Dynamique (Travaux, Ajouts) :** Si le graphe est dynamique ( à cause de fermeture temporaire de station, grêves, etc ), le problème devient plus complexe. Il faut notamment, une stratégie d'invalidation du cache.
+        *   *Stratégie Naïve :* Tout invalider au moindre changement.
+        *   *Fine :* Si une station est modifiée/supprimée, on invalide uniquement les trajets qui passent par cette station. Cela nécessite de stocker un index inversé (pour chaque station -> liste des trajets l'empruntant).
+    *   **Dijkstra** : Si le calcul de l'itinéraire devenait un problème de performance, on pourrait réécrire Dijkstra en C++.
+    *   **Sécurité (Production)** : **Docker Secrets** pour les mots de passe de Redis et MariaDB.
 
-- Implémenter un **backend PHP 8** exposant une API conforme à la spécification **OpenAPI** fournie.
-- Développer un **frontend TypeScript** consommant cette API.
-- Fournir une **couverture de code** mesurable (tests unitaires et d’intégration).
-- Déployer l’application avec un minimum d’opérations via **Docker** ou **Docker Compose**.
-- Mettre en place un **pipeline CI/CD complet** (build, tests, coverage, lint, déploiement).
-- Utiliser un **versioning de code** clair et structuré.
-- Garantir des **communications sécurisées** (HTTPS, gestion des secrets, authentification).
+## 4. Outils & Méthodologie
 
----
-
-## 🏗️ Architecture attendue
-
-- **Backend**  
-  - PHP 8.4 obligatoire.
-  - Utilisation d'un Framework (Symfony, CakePHP, Slim, Laravel,...) facultatif.  
-  - Implémentation stricte de l’API OpenAPI fournie.  
-  - Tests avec PHPUnit + rapport de couverture.  
-
-- **Frontend**
-  - TypeScript 5 obligatoire.
-  - Interface utilisateur pour :  
-    - Créer un trajet (station A → station B) + type de trajet.  
-    - Consulter les statistiques par code analytique.
-  - Tests avec Vitest/Jest + rapport de couverture.
-
-- **Infrastructure** 
-  - Docker Engine 25
-  - Docker/Docker Compose pour orchestrer backend, frontend, base de données et reverse proxy (si nécessaire).  
-  - Déploiement en une commande (`docker compose up -d`).  
-
-> 💡 Conseil : documente tes choix dans une documentation.
-
----
-
-## 🔄 CI/CD complet
-
-Voici notre point de vue de la représentation d'un CI/CD complet :
-- Build : images backend/frontend
-- Qualité : lint + tests + coverage (fail si seuils non atteints)
-- Sécurité : SAST/DAST (ex: phpstan, npm audit, Trivy)
-- Release : tagging sémantique ou calendaire, changelog
-- Delivery : push images vers registry, déploiement automatisé (Compose ou SSH)
-
-## 🤖 Code généré par IA
-
-Tu es libre d’utiliser les outils qui te semblent les plus adaptés pour réaliser ce défi. Cela inclut bien sûr le code généré par des intelligences artificielles. Nous savons que ces outils font partie du quotidien des développeurs, et nous voulons voir comment tu es capable de les intégrer intelligemment dans ta solution.
-
-## 🎁 Les points Bonus
-- Implémenter un algorithme de routage (ex. Dijkstra) pour calculer la distance entre deux stations.
-- Exposer un endpoint de statistiques agrégées par code analytique.
-- Visualiser ces statistiques dans le frontend (graphique/tableau).
-
-## ✅ Critères d’évaluation
-- Couverture : rapports générés et seuils respectés
-- OpenAPI : conformité stricte des endpoints et schémas
-- Docker : démarrage en une ou deux commandes, documentation claire
-- Frontend : UX propre, typé en TypeScript, tests présents
-- CI/CD : pipeline fiable, scans basiques de sécurité, images publiées
-- Sécurité : HTTPS, auth, headers, gestion des secrets
-- Qualité : code lisible, commits atomiques, architecture cohérente
-
----
-## 🚀 À toi de jouer !
-Nous avons hâte de découvrir ta solution et de voir comment tu abordes ce défi.  
-Bonne chance, et surtout amuse-toi en codant !
+*   **Développement :** 
+    *   **TDD / DDD** : pas utilisés.
+    *   __Backend__ : `nodemon` (voir `nodemon.json`) .
+    *   __Frontend__ : Le hot reloading est géré par Vite.
+    *   __Tests__ : **PHPUnit** pour le backend et **Vitest** pour le frontend, avec reporting de couverture via **Codecov**.
+*   **IA Generative :** Je maîtrise moins PHP que Vue , donc pour PHP, j'ai utilisé l'IA pour spécifier le besoin et générer le squelette du code, puis j'ai fait des modifications manuelles.
